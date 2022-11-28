@@ -131,4 +131,32 @@ userRouter.post(
   })
 );
 
+//create admin
+userRouter.post('/createadmin', expressAsyncHandler( async (req, res)=>{
+  try{
+    const user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password),
+      isAdmin: true,
+    });
+    const admin = await user.save();
+    res.send({ 
+      _id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      isAdmin: admin.isAdmin,
+      token: generateToken(admin),
+    });
+  } catch (error){
+    res.send({ message: error.message });
+  }
+  
+    
+}));
+
+      
+
+
+
 export default userRouter;
